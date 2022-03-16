@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.omfgdevelop.composition.R
+import com.omfgdevelop.composition.databinding.FragmentGameFinishedBinding
 import com.omfgdevelop.composition.domain.entity.GameResult
 
 class GameFinishedFragment : Fragment() {
 
     private lateinit var gameResult: GameResult
+
+    private var _binding: FragmentGameFinishedBinding? = null
+    private val binding: FragmentGameFinishedBinding
+        get() = _binding ?: throw RuntimeException()
+
 
     companion object {
 
@@ -23,14 +27,16 @@ class GameFinishedFragment : Fragment() {
         fun newInstance(gameResult: GameResult): GameFinishedFragment {
             return GameFinishedFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(GAME_RESULT, gameResult)
+                    putParcelable(GAME_RESULT, gameResult)
                 }
             }
         }
     }
 
     private fun parseArgs() {
-        gameResult = requireArguments().getSerializable(GAME_RESULT) as GameResult
+        requireArguments().getParcelable<GameResult>(GAME_RESULT)?.let {
+            gameResult = it
+        }
 
     }
 
@@ -42,19 +48,28 @@ class GameFinishedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_game_finished, container, false)
+    ): View {
+        _binding = FragmentGameFinishedBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setListeners()
+    }
+
+    private fun setListeners() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     retryGame()
                 }
             })
+        binding.buttonRetry.setOnClickListener {
+            retryGame()
+        }
     }
+
 
     private fun retryGame() {
         requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, 1)
