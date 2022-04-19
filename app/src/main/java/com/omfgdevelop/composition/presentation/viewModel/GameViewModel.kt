@@ -15,7 +15,7 @@ import com.omfgdevelop.composition.domain.repository.GameRepository
 import com.omfgdevelop.composition.domain.usecases.GenerateQuestionUseCase
 import com.omfgdevelop.composition.domain.usecases.GetGameSettingsUseCase
 
-class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val MILLS_IN_SECONDS = 1000L
@@ -80,6 +80,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         getGameSettings(level)
         startTimer()
         generateQuestion()
+        updateProgress()
     }
 
     private fun getGameSettings(level: Level) {
@@ -150,6 +151,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun calcPercent(): Int {
+        if (totalQuestions == 0) return 0
         return ((countOfCorrectAnswers / totalQuestions.toDouble()) * 100).toInt()
     }
 
