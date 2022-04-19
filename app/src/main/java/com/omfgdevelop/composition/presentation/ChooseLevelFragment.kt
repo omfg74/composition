@@ -5,20 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.omfgdevelop.composition.R
 import com.omfgdevelop.composition.databinding.FragmentChooseLevelBinding
 import com.omfgdevelop.composition.domain.entity.Level
 
 class ChooseLevelFragment : Fragment() {
 
-    companion object {
-
-        const val NAME: String = "choose_level"
-
-        fun newInstance(): Fragment {
-            return ChooseLevelFragment()
-        }
-    }
 
     private var _binding: FragmentChooseLevelBinding? = null
     private val binding: FragmentChooseLevelBinding
@@ -50,10 +43,8 @@ class ChooseLevelFragment : Fragment() {
     }
 
     private fun navigateToGameFragment(level: Level) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance(level))
-            .addToBackStack(GameFragment.NAME)
-            .commit()
+        findNavController().navigate(ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(level))
+
     }
 
 
