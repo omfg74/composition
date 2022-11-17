@@ -11,10 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.omfgdevelop.composition.R
 import com.omfgdevelop.composition.databinding.FragmentGameBinding
 import com.omfgdevelop.composition.domain.entity.GameResult
-import com.omfgdevelop.composition.domain.entity.Level
 import com.omfgdevelop.composition.presentation.viewModel.GameViewModel
 
 class GameFragment : Fragment() {
@@ -47,6 +45,8 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         observeViewModel()
         setClickListeners()
     }
@@ -95,9 +95,6 @@ class GameFragment : Fragment() {
         }
         viewModel.progressAnswers.observe(viewLifecycleOwner) {
             binding.tvAnswersProgress.text = it
-        }
-        viewModel.formattedTime.observe(viewLifecycleOwner){
-            binding.tvTimer.text=it
         }
         viewModel.minPercent.observe(viewLifecycleOwner){
             binding.progressBar.secondaryProgress=it
